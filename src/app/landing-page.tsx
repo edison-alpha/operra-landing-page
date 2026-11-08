@@ -24,10 +24,10 @@ const FEATURE_ICONS = {
   identity: "badge-rounded", nft: "token-rounded", connection: "hub-rounded",
 } as const
 const WORKFLOW = [
-  { title: "Set the work in motion.", body: "Describe the goal, context, and outcome your team needs.", name: "Define", status: "Shared Docs available" },
-  { title: "Bring in the right help.", body: "Choose a person for judgment or an agent for focused execution.", name: "Contribute", status: "Task handoffs planned" },
-  { title: "Confirm what is done.", body: "Review the result against the original request before moving on.", name: "Approve", status: "Formal review planned" },
-  { title: "Close the loop.", body: "Once the work is accepted, the contributor can be paid through NEAR.", name: "Settle", status: "NEAR settlement planned" },
+  { title: "Describe the work.", body: "Write the goal, context, and outcome in OperraDocs.", name: "Describe", status: "OperraDocs available" },
+  { title: "Match the right help.", body: "Bring in a human teammate or an agent for the task.", name: "Match", status: "Office available" },
+  { title: "Review the result.", body: "Compare the work with the original request before approval.", name: "Review", status: "Review flow planned" },
+  { title: "Send the contribution.", body: "Approve the work, then send the contributor payment through NEAR.", name: "Send", status: "NEAR send planned" },
 ]
 
 function NearAttribution() {
@@ -40,11 +40,41 @@ function FeatureIcon({ kind }: { kind: keyof typeof FEATURE_ICONS }) {
 
 function PaymentPreview() {
   return <div className="lp-payment-preview" aria-label="Payment flow preview">
-    <div className="lp-payment-party"><span className="lp-payment-avatar">Y</span><span><strong>Your task</strong><small>Approved work</small></span></div>
-    <div className="lp-payment-transfer" aria-hidden="true"><span className="lp-payment-pulse" /><span className="lp-payment-line" /><span className="lp-payment-arrow">→</span></div>
-    <div className="lp-payment-party"><span className="lp-payment-avatar lp-payment-avatar-recipient">C</span><span><strong>Contributor</strong><small>Payment planned</small></span></div>
-    <div className="lp-payment-status"><span />NEAR settlement planned</div>
+    <div className="lp-payment-scenes" aria-hidden="true">
+      <div className="lp-payment-scene lp-payment-scene-review">
+        <div className="lp-payment-scene-heading"><span>Send contribution</span><small>Review transaction</small></div>
+        <div className="lp-payment-amount"><strong>NEAR</strong><span>To contributor wallet</span></div>
+        <div className="lp-payment-detail"><span>Network</span><strong>NEAR Protocol</strong></div>
+      </div>
+      <div className="lp-payment-scene lp-payment-scene-confirm">
+        <div className="lp-payment-wallet-logo"><img src="/assets/near/near-symbol.svg" alt="" /><span>NEAR Wallet</span></div>
+        <strong>Confirm in wallet</strong>
+        <small>Approve the contribution settlement</small>
+        <div className="lp-payment-confirm-button">Confirm</div>
+      </div>
+      <div className="lp-payment-scene lp-payment-scene-send">
+        <div className="lp-payment-flow">
+          <div className="lp-payment-party"><span className="lp-payment-avatar lp-payment-avatar-near"><img src="/assets/near/near-symbol.svg" alt="" aria-hidden="true" /></span><span><strong>OPERRA task</strong><small>Approved work</small></span></div>
+          <div className="lp-payment-transfer"><span className="lp-payment-pulse" /><span className="lp-payment-line" /><span className="lp-payment-arrow">→</span></div>
+          <div className="lp-payment-party"><span className="lp-payment-avatar lp-payment-avatar-recipient"><img src="/assets/operra-logo.svg" alt="" aria-hidden="true" /></span><span><strong>Contributor</strong><small>NEAR wallet</small></span></div>
+        </div>
+      </div>
+      <div className="lp-payment-scene lp-payment-scene-complete">
+        <div className="lp-payment-complete-mark">✓</div>
+        <strong>Contribution sent</strong>
+        <small>Settlement recorded on NEAR</small>
+      </div>
+    </div>
+    <div className="lp-payment-status"><span className="lp-payment-status-dot" /><span className="lp-payment-status-text">Wallet send preview</span><span className="lp-payment-status-note">Planned</span></div>
   </div>
+}
+
+function WorkflowPreview({ name }: { name: string }) {
+  if (name === "Describe") return <div className="lp-workflow-preview lp-describe-preview" aria-hidden="true"><span className="lp-preview-heading">Launch brief</span><p className="lp-preview-prompt">Help the team prepare a clear launch plan. Gather the context, assign the next task, and return the evidence we need to review.</p><span className="lp-preview-caret" /></div>
+  if (name === "Match") return <div className="lp-workflow-preview lp-match-preview" aria-hidden="true"><span className="lp-match-person lp-match-human"><FeatureIcon kind="human" /></span><span className="lp-match-line" /><span className="lp-match-mcp">MCP</span><span className="lp-match-line lp-match-line-right" /><span className="lp-match-person lp-match-agent"><FeatureIcon kind="agent" /></span></div>
+  if (name === "Review") return <div className="lp-workflow-preview lp-review-preview" aria-hidden="true"><span className="lp-review-row"><i />Scope matches the brief</span><span className="lp-review-row"><i />Evidence is attached</span><span className="lp-review-row"><i />Ready to approve</span></div>
+  if (name === "Agent") return <div className="lp-workflow-preview lp-mcp-preview" aria-hidden="true"><span className="lp-mcp-party lp-mcp-operra"><img src="/assets/operra-logo-black.svg" alt="" /><small>OPERRA</small></span><span className="lp-mcp-link"><i /><b>MCP</b><i /></span><span className="lp-mcp-party lp-mcp-agent"><span className="lp-mcp-agent-icon"><FeatureIcon kind="agent" /></span><small>Agent</small></span></div>
+  return <div className="lp-workflow-preview lp-logo-preview lp-identity-preview" aria-hidden="true"><img src="/assets/operra-logo.svg" alt="" /><span>Avatar identity</span><i /></div>
 }
 
 function EcosystemLogos({ duplicate = false }: { duplicate?: boolean }) {
@@ -247,9 +277,8 @@ export default function Home() {
     <section className="lp-together" id="agents" aria-labelledby="together-heading"><div className="lp-together-heading lp-container"><p>Different strengths. One shared office.</p><h2 id="together-heading">Human + Agent</h2><p className="lp-together-description">Human judgment meets agent capability.<br />A common place to move the work forward.</p><details className="lp-agent-details"><summary>See the MCP connection plan</summary><p>Humans can enter the office today. The upcoming MCP connector will connect agent runtimes to office messages, shared Docs, and task handoffs. Agent connections are not live in this release.</p></details></div><figure className="lp-community"><img src="/assets/landing/operra-community.webp" width={1672} height={941} loading="lazy" alt="An illustrative photographic collage of people creating, writing, and collaborating" /><figcaption>Community concept artwork</figcaption></figure></section>
 
     <section className="lp-workflow" id="how-it-works" aria-labelledby="workflow-heading">
-      <div className="lp-container lp-workflow-intro"><p className="lp-section-label">From request to settlement</p><h2 id="workflow-heading">Work moves forward in one place.</h2><p>Bring humans and agents into the same flow.<br />Keep the request, review, and reward connected.</p><a href="#workflow-cards" className="lp-button lp-button-dark">See how it works</a></div>
-      <div className="lp-workflow-grid" id="workflow-cards">{WORKFLOW.map((item, index) => <article key={item.name} id={`workflow-${index + 1}`} className={`lp-workflow-step lp-info-card${item.name === "Settle" ? " lp-info-card-payment" : ""}`}><div className="lp-info-top"><span className="lp-step-number">0{index + 1}</span><span className="lp-status">{item.status}</span></div><h3>{item.title}</h3><p>{item.body}</p>{item.name === "Settle" && <PaymentPreview />}<strong>{item.name}</strong></article>)}<article className="lp-info-card"><div className="lp-info-top"><FeatureIcon kind="agent" /><span className="lp-status">MCP connection planned</span></div><h3>Give your agent a place in the team.</h3><p>The planned MCP connector will let external agents participate through office tools, with access set by the people responsible for them.</p><a href="#agents">Agent connection plan</a></article><article className="lp-info-card" id="identity"><div className="lp-info-top"><FeatureIcon kind="human" /><span className="lp-status">NFT ownership planned</span></div><h3>Your avatar. Your identity.</h3><p>Today's avatars are visual profiles. The next chapter adds NEAR NFTs, wallet ownership, and verifiable identities for humans and agents.</p><Link to="/app">Create your avatar</Link></article></div>
-      <p className="lp-workflow-note lp-container">The office and Docs are available. Task handoffs, formal review, payments, agent connections, and avatar NFTs are in development.</p>
+      <div className="lp-container lp-workflow-intro"><p className="lp-section-label">From describe to send</p><h2 id="workflow-heading">Work moves forward in one place.</h2><p>Describe the work, match the right help, review the result, and send the contribution.</p><a href="#workflow-cards" className="lp-button lp-button-dark">See how it works</a></div>
+      <div className="lp-workflow-grid" id="workflow-cards">{WORKFLOW.map((item, index) => <article key={item.name} id={`workflow-${index + 1}`} className={`lp-workflow-step lp-info-card${item.name === "Send" ? " lp-info-card-payment" : ""}`}><div className="lp-info-top"><span className="lp-step-number">0{index + 1}</span><span className="lp-status">{item.status}</span></div><h3>{item.title}</h3><p>{item.body}</p>{item.name === "Send" ? <PaymentPreview /> : <WorkflowPreview name={item.name} />}<strong>{item.name}</strong></article>)}<article className="lp-info-card"><div className="lp-info-top"><FeatureIcon kind="agent" /><span className="lp-status">MCP connection planned</span></div><h3>Give your agent a place in the team.</h3><p>The planned MCP connector will let external agents participate through office tools, with access set by the people responsible for them.</p><WorkflowPreview name="Agent" /><a href="#agents">Agent connection plan</a></article><article className="lp-info-card" id="identity"><div className="lp-info-top"><FeatureIcon kind="human" /><span className="lp-status">NFT ownership planned</span></div><h3>Your avatar. Your identity.</h3><p>Today's avatars are visual profiles. The next chapter adds NEAR NFTs, wallet ownership, and verifiable identities for humans and agents.</p><WorkflowPreview name="Identity" /><Link to="/app">Create your avatar</Link></article></div>
     </section>
 
     <section className="lp-final-cta" aria-labelledby="cta-heading"><div className="lp-cta-card"><p className="lp-cta-availability"><FeatureIcon kind="human" />For humans today <span /> <FeatureIcon kind="agent" />For agents next</p><h2 id="cta-heading">The future of teamwork<br />starts with you.</h2><Link to="/app" className="lp-cta-qr" aria-label="Open the OPERRA office">{qrCode ? <img src={qrCode} width={300} height={300} alt="Scan to open this OPERRA office" /> : <OperraLogo size={180} />}</Link><Link to="/app" className="lp-cta-link">Open the office</Link><p className="lp-cta-note">Scan to open OPERRA in your browser.</p></div></section>
