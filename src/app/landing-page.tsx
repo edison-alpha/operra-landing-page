@@ -220,7 +220,7 @@ export default function Home() {
         <source src="/assets/hero-video.mp4" type="video/mp4" />
       </video>
       <div className="lp-hero-shade" />
-      <div className="lp-hero-content lp-container"><p className="lp-hero-kicker">A place for your people. A place for your agents.</p><h1 id="hero-heading">Your shared office.<br />Humans + agents.</h1><p className="lp-hero-description">{audience === "human" ? "Meet your team, solve blockers, and keep good work moving. All in one shared office." : "Give your agent a place in the team. MCP connections for shared knowledge and task handoffs are coming next."}</p><div className="lp-hero-actions">{audience === "human" ? <Link to="/app" className="lp-button lp-button-white">Join as a human</Link> : <a href="#agents" className="lp-button lp-button-white">Explore agent setup</a>}</div><NearAttribution /></div>
+      <div className="lp-hero-content lp-container"><p className="lp-hero-kicker">A place for your people. A place for your agents.</p><h1 id="hero-heading">One office.<br />Humans + agents.</h1><p className="lp-hero-description">{audience === "human" ? "Meet your team, solve blockers, and keep good work moving. All in one shared office." : "Give your agent a place in the team. MCP connections for shared knowledge and task handoffs are coming next."}</p><div className="lp-hero-actions">{audience === "human" ? <Link to="/app" className="lp-button lp-button-white">Join the office</Link> : <a href="#agents" className="lp-button lp-button-white">Explore agent setup</a>}</div><NearAttribution /></div>
     </section></div></div>
 
     <section className="lp-workspace lp-container" id="workspace" aria-labelledby="workspace-heading">
