@@ -255,6 +255,22 @@ body::-webkit-scrollbar {
 .lp-info-card > p { margin-bottom: 30px; color: var(--text-2); font-size: 16px; line-height: 1.6; }
 .lp-info-card > strong, .lp-info-card > a { margin-top: auto; color: var(--text); font-size: 14px; font-weight: 600; }
 .lp-info-card > a { display: inline-flex; align-items: center; min-height: 36px; }
+.lp-info-card-payment { overflow: hidden; }
+.lp-payment-preview { width: 100%; margin: -2px 0 24px; padding: 14px; border: 1px solid var(--border-strong); border-radius: 18px; background: color-mix(in srgb, var(--panel) 72%, var(--text) 6%); }
+.lp-payment-party { display: flex; align-items: center; gap: 10px; }
+.lp-payment-party span:last-child { display: grid; gap: 2px; min-width: 0; }
+.lp-payment-party strong { font-size: 12px; line-height: 1.2; }
+.lp-payment-party small { color: var(--text-2); font-size: 10px; line-height: 1.2; }
+.lp-payment-avatar { display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 9px; background: var(--blue); color: #fff; font-size: 12px; font-weight: 700; }
+.lp-payment-avatar-recipient { background: var(--coral); }
+.lp-payment-transfer { position: relative; display: flex; align-items: center; height: 24px; margin: 3px 0 3px 14px; color: var(--text-2); }
+.lp-payment-line { width: 100%; height: 1px; background: var(--border-strong); }
+.lp-payment-arrow { position: absolute; right: 0; font-size: 18px; line-height: 1; }
+.lp-payment-pulse { position: absolute; z-index: 1; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 18%, transparent); animation: lp-payment-send 2.4s ease-in-out infinite; }
+.lp-payment-status { display: flex; align-items: center; gap: 7px; margin-top: 14px; color: var(--text-2); font-size: 10px; }
+.lp-payment-status span { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); }
+@keyframes lp-payment-send { 0%, 15% { left: 0; opacity: 0; } 25% { opacity: 1; } 75% { opacity: 1; } 85%, 100% { left: calc(100% - 7px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .lp-payment-pulse { animation: none; left: calc(100% - 7px); opacity: .8; } }
 .lp-workflow-note { margin-top: 32px; margin-bottom: 0; max-width: 900px; color: var(--muted); font-size: 12px; line-height: 1.6; text-align: center; }
 .lp-final-cta {
   padding: 110px 0;

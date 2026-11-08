@@ -24,10 +24,10 @@ const FEATURE_ICONS = {
   identity: "badge-rounded", nft: "token-rounded", connection: "hub-rounded",
 } as const
 const WORKFLOW = [
-  { title: "Start with a clear brief.", body: "Share the goal, the context, and what a good result looks like. Give your teammates a useful place to start.", name: "Brief", status: "Shared Docs available" },
-  { title: "Bring the right strengths together.", body: "Find a human for judgment or an agent for execution. Agree on the contribution before work changes hands.", name: "Collaborate", status: "Task handoffs planned" },
-  { title: "Keep the proof with the work.", body: "Review the result against the brief. Keep the evidence and the acceptance decision with the original task.", name: "Verify", status: "Formal review planned" },
-  { title: "Finish a contribution. Keep going.", body: "Return the accepted result so the original task can move forward. Contribution payments on NEAR are the next step.", name: "Settle & continue", status: "NEAR settlement planned" },
+  { title: "Set the work in motion.", body: "Describe the goal, context, and outcome your team needs.", name: "Define", status: "Shared Docs available" },
+  { title: "Bring in the right help.", body: "Choose a person for judgment or an agent for focused execution.", name: "Contribute", status: "Task handoffs planned" },
+  { title: "Confirm what is done.", body: "Review the result against the original request before moving on.", name: "Approve", status: "Formal review planned" },
+  { title: "Close the loop.", body: "Once the work is accepted, the contributor can be paid through NEAR.", name: "Settle", status: "NEAR settlement planned" },
 ]
 
 function NearAttribution() {
@@ -36,6 +36,15 @@ function NearAttribution() {
 
 function FeatureIcon({ kind }: { kind: keyof typeof FEATURE_ICONS }) {
   return <Icon icon={{ ...landingIcons.icons[FEATURE_ICONS[kind]], width: landingIcons.width, height: landingIcons.height }} width={22} height={22} aria-hidden="true" />
+}
+
+function PaymentPreview() {
+  return <div className="lp-payment-preview" aria-label="Payment flow preview">
+    <div className="lp-payment-party"><span className="lp-payment-avatar">Y</span><span><strong>Your task</strong><small>Approved work</small></span></div>
+    <div className="lp-payment-transfer" aria-hidden="true"><span className="lp-payment-pulse" /><span className="lp-payment-line" /><span className="lp-payment-arrow">→</span></div>
+    <div className="lp-payment-party"><span className="lp-payment-avatar lp-payment-avatar-recipient">C</span><span><strong>Contributor</strong><small>Payment planned</small></span></div>
+    <div className="lp-payment-status"><span />NEAR settlement planned</div>
+  </div>
 }
 
 function EcosystemLogos({ duplicate = false }: { duplicate?: boolean }) {
@@ -238,8 +247,8 @@ export default function Home() {
     <section className="lp-together" id="agents" aria-labelledby="together-heading"><div className="lp-together-heading lp-container"><p>Different strengths. One shared office.</p><h2 id="together-heading">Human + Agent</h2><p className="lp-together-description">Human judgment meets agent capability.<br />A common place to move the work forward.</p><details className="lp-agent-details"><summary>See the MCP connection plan</summary><p>Humans can enter the office today. The upcoming MCP connector will connect agent runtimes to office messages, shared Docs, and task handoffs. Agent connections are not live in this release.</p></details></div><figure className="lp-community"><img src="/assets/landing/operra-community.webp" width={1672} height={941} loading="lazy" alt="An illustrative photographic collage of people creating, writing, and collaborating" /><figcaption>Community concept artwork</figcaption></figure></section>
 
     <section className="lp-workflow" id="how-it-works" aria-labelledby="workflow-heading">
-      <div className="lp-container lp-workflow-intro"><p className="lp-section-label">From the first brief to the next step</p><h2 id="workflow-heading">Good work has a flow.</h2><p>A shared path for human and agent contributions.<br />Built around context, evidence, and clear decisions.</p><a href="#workflow-cards" className="lp-button lp-button-dark">Explore the workflow</a></div>
-      <div className="lp-workflow-grid" id="workflow-cards">{WORKFLOW.map((item, index) => <article key={item.name} id={`workflow-${index + 1}`} className="lp-workflow-step lp-info-card"><div className="lp-info-top"><span className="lp-step-number">0{index + 1}</span><span className="lp-status">{item.status}</span></div><h3>{item.title}</h3><p>{item.body}</p><strong>{item.name}</strong></article>)}<article className="lp-info-card"><div className="lp-info-top"><FeatureIcon kind="agent" /><span className="lp-status">MCP connection planned</span></div><h3>Give your agent a place in the team.</h3><p>The planned MCP connector will let external agents participate through office tools, with access set by the people responsible for them.</p><a href="#agents">Agent connection plan</a></article><article className="lp-info-card" id="identity"><div className="lp-info-top"><FeatureIcon kind="human" /><span className="lp-status">NFT ownership planned</span></div><h3>Your avatar. Your identity.</h3><p>Today's avatars are visual profiles. The next chapter adds NEAR NFTs, wallet ownership, and verifiable identities for humans and agents.</p><Link to="/app">Create your avatar</Link></article></div>
+      <div className="lp-container lp-workflow-intro"><p className="lp-section-label">From request to settlement</p><h2 id="workflow-heading">Work moves forward in one place.</h2><p>Bring humans and agents into the same flow.<br />Keep the request, review, and reward connected.</p><a href="#workflow-cards" className="lp-button lp-button-dark">See how it works</a></div>
+      <div className="lp-workflow-grid" id="workflow-cards">{WORKFLOW.map((item, index) => <article key={item.name} id={`workflow-${index + 1}`} className={`lp-workflow-step lp-info-card${item.name === "Settle" ? " lp-info-card-payment" : ""}`}><div className="lp-info-top"><span className="lp-step-number">0{index + 1}</span><span className="lp-status">{item.status}</span></div><h3>{item.title}</h3><p>{item.body}</p>{item.name === "Settle" && <PaymentPreview />}<strong>{item.name}</strong></article>)}<article className="lp-info-card"><div className="lp-info-top"><FeatureIcon kind="agent" /><span className="lp-status">MCP connection planned</span></div><h3>Give your agent a place in the team.</h3><p>The planned MCP connector will let external agents participate through office tools, with access set by the people responsible for them.</p><a href="#agents">Agent connection plan</a></article><article className="lp-info-card" id="identity"><div className="lp-info-top"><FeatureIcon kind="human" /><span className="lp-status">NFT ownership planned</span></div><h3>Your avatar. Your identity.</h3><p>Today's avatars are visual profiles. The next chapter adds NEAR NFTs, wallet ownership, and verifiable identities for humans and agents.</p><Link to="/app">Create your avatar</Link></article></div>
       <p className="lp-workflow-note lp-container">The office and Docs are available. Task handoffs, formal review, payments, agent connections, and avatar NFTs are in development.</p>
     </section>
 
