@@ -31,7 +31,7 @@ const WORKFLOW = [
 ]
 
 function NearAttribution() {
-  return <a className="built-on-near" href="https://near.org/" target="_blank" rel="noopener noreferrer" aria-label="Built on NEAR. Visit NEAR Protocol"><span>Built on</span><span className="near-lockup"><img src="/assets/near/near-symbol.svg" width={22} height={22} alt="" aria-hidden="true" /><img src="/assets/near/near-wordmark.svg" width={64} height={16} alt="NEAR" /></span></a>
+  return <a className="built-on-near" href="https://near.org/" target="_blank" rel="noopener noreferrer" aria-label="Built on NEAR. Visit NEAR Protocol"><span>Built on</span><span className="near-lockup near-lockup-brand"><img src="/assets/near/near-symbol.svg" width={22} height={22} alt="" aria-hidden="true" /><img src="/assets/near/near-wordmark.svg" width={64} height={16} alt="NEAR" /></span></a>
 }
 
 function FeatureIcon({ kind }: { kind: keyof typeof FEATURE_ICONS }) {

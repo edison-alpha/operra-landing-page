@@ -137,7 +137,25 @@ body::-webkit-scrollbar {
 .lp-hero-actions .lp-button { min-height: 56px; min-width: 210px; font-size: 15px; }
 .built-on-near { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 16px; color: var(--lp-on-dark); text-decoration: none; font-size: 13px; }
 .near-lockup { display: inline-flex; align-items: center; gap: 8px; }
-.near-lockup img { display: block; flex-shrink: 0; object-fit: contain; filter: invert(1); }
+.near-lockup img { display: block; flex-shrink: 0; object-fit: contain; }
+.near-lockup-brand img {
+  filter: none;
+  background: #00c08b;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+.near-lockup-brand img:first-child {
+  mask-image: url("/assets/near/near-symbol.svg");
+  -webkit-mask-image: url("/assets/near/near-symbol.svg");
+}
+.near-lockup-brand img:last-child {
+  mask-image: url("/assets/near/near-wordmark.svg");
+  -webkit-mask-image: url("/assets/near/near-wordmark.svg");
+}
 .lp-hero :focus-visible { outline-color: #fff; }
 .lp-workspace { padding-block: clamp(64px, 7vw, 104px) calc(var(--lp-transition-height) + 60px); }
 .lp-workspace > h2 { margin: 0; font-size: clamp(36px, 3.8vw, 58px); line-height: 1.1; text-align: center; letter-spacing: -.04em; }
