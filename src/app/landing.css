@@ -139,22 +139,7 @@ body::-webkit-scrollbar {
 .near-lockup { display: inline-flex; align-items: center; gap: 8px; }
 .near-lockup img { display: block; flex-shrink: 0; object-fit: contain; }
 .near-lockup-brand img {
-  filter: none;
-  background: #00c08b;
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-}
-.near-lockup-brand img:first-child {
-  mask-image: url("/assets/near/near-symbol.svg");
-  -webkit-mask-image: url("/assets/near/near-symbol.svg");
-}
-.near-lockup-brand img:last-child {
-  mask-image: url("/assets/near/near-wordmark.svg");
-  -webkit-mask-image: url("/assets/near/near-wordmark.svg");
+  filter: brightness(0) saturate(100%) invert(54%) sepia(88%) saturate(1025%) hue-rotate(126deg) brightness(91%) contrast(101%);
 }
 .lp-hero :focus-visible { outline-color: #fff; }
 .lp-workspace { padding-block: clamp(64px, 7vw, 104px) calc(var(--lp-transition-height) + 60px); }
