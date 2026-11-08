@@ -3,7 +3,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import type { AnchorHTMLAttributes } from "react"
 import { Icon } from "@iconify/react/offline"
-import { animate } from "motion"
 import Lenis from "lenis"
 import { toDataURL } from "qrcode"
 import { OperraLogo } from "../shared/OperraLogo"
@@ -87,39 +86,64 @@ export default function Home() {
   const closeNavigation = () => { closeMenu(); setActiveDropdown(null) }
 
   useEffect(() => {
-    const root = document.querySelector<HTMLElement>(".site-landing")
-    if (!root) return
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     const lenis = new Lenis({
-      autoRaf: true,
+      autoRaf: false,
+      lerp: 0.075,
       smoothWheel: true,
-      duration: 1.05,
+      syncTouch: true,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1,
     })
-    const sectionAnimations = reducedMotion.matches
-      ? []
-      : Array.from(root.querySelectorAll<HTMLElement>("section:not(.lp-hero)")).map((section, index) =>
-        animate(section, { opacity: [0, 1], y: [28, 0] }, {
-          delay: index * 0.06,
-          duration: 0.75,
-          ease: [0.22, 1, 0.36, 1],
-          autoplay: false,
-        }),
-      )
-    const revealSections = () => {
-      sectionAnimations.forEach((animation, index) => {
-        const section = root.querySelectorAll<HTMLElement>("section:not(.lp-hero)")[index]
-        if (!section) return
-        const bounds = section.getBoundingClientRect()
-        if (bounds.top < window.innerHeight * 0.9) animation.play()
-      })
+    let frame = 0
+    const raf = (time: number) => {
+      lenis.raf(time)
+      frame = requestAnimationFrame(raf)
     }
-    revealSections()
-    window.addEventListener("scroll", revealSections, { passive: true })
+    frame = requestAnimationFrame(raf)
     return () => {
-      window.removeEventListener("scroll", revealSections)
-      sectionAnimations.forEach(animation => animation.cancel())
+      cancelAnimationFrame(frame)
       lenis.destroy()
     }
+  }, [])
+
+  useEffect(() => {
+    const stage = heroStage.current
+    if (!stage) return
+    const pin = stage.querySelector<HTMLElement>(".lp-hero-pin")
+    const surface = stage.querySelector<HTMLElement>(".lp-hero")
+    if (!pin || !surface) return
+    let start = 0
+    let distance = 1
+    const paint = (progress: number) => {
+      stage.style.setProperty("--lp-hero-progress", String(progress * progress * (3 - 2 * progress)))
+      const bounds = surface.getBoundingClientRect()
+      const navigationCenter = header.current?.offsetHeight ?? 72
+      setScrolled(bounds.top >= navigationCenter || bounds.bottom <= navigationCenter)
+    }
+    const measure = () => {
+      start = stage.getBoundingClientRect().top + window.scrollY
+      distance = Math.max(1, stage.offsetHeight - pin.offsetHeight)
+      const inset = (header.current?.offsetHeight ?? 72) + (window.innerWidth <= 600 ? 12 : 20)
+      const scale = Math.min(.925, Math.max(.8, (window.innerHeight - inset - 20) / surface.offsetHeight))
+      stage.style.setProperty("--lp-hero-end-scale", String(scale))
+      stage.style.setProperty("--lp-hero-drop", `${inset}px`)
+      paint(Math.max(0, Math.min(1, (window.scrollY - start) / distance)))
+    }
+    const onScroll = () => paint(Math.max(0, Math.min(1, (window.scrollY - start) / distance)))
+    measure()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", measure)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", measure)
+    }
+  }, [])
+
+  useEffect(() => {
+    const video = heroVideo.current
+    if (!video) return
+    void video.play().catch(() => {})
+    return () => video.pause()
   }, [])
 
   useLayoutEffect(() => {
@@ -146,90 +170,6 @@ export default function Home() {
     window.addEventListener("resize", positionPanel)
     return () => { observer.disconnect(); window.removeEventListener("resize", positionPanel) }
   }, [activeDropdown])
-
-  useEffect(() => {
-    const stage = heroStage.current
-    if (!stage) return
-    const pin = stage.querySelector<HTMLElement>(".lp-hero-pin")!
-    const surface = stage.querySelector<HTMLElement>(".lp-hero")!
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-    let frame = 0
-    let start = 0
-    let distance = 1
-    let target = 0
-    let current = 0
-    let previousTime = 0
-    const paint = (progress: number) => {
-      stage.style.setProperty("--lp-hero-progress", String(progress * progress * (3 - 2 * progress)))
-      const bounds = surface.getBoundingClientRect()
-      const navigationCenter = (header.current?.offsetHeight ?? 72) / 2
-      setScrolled(bounds.top >= navigationCenter || bounds.bottom <= navigationCenter)
-    }
-    const render = (time: number) => {
-      frame = 0
-      const delta = Math.min(64, previousTime ? time - previousTime : 16.7)
-      previousTime = time
-      current += (target - current) * (1 - Math.exp(-delta / 160))
-      if (Math.abs(target - current) < .0001) current = target
-      paint(current)
-      if (current !== target) frame = requestAnimationFrame(render)
-      else previousTime = 0
-    }
-    const updateTarget = (immediate = false) => {
-      target = reducedMotion.matches ? 0 : Math.max(0, Math.min(1, (window.scrollY - start) / distance))
-      if (immediate || reducedMotion.matches) {
-        cancelAnimationFrame(frame)
-        frame = 0
-        previousTime = 0
-        current = target
-        paint(current)
-      } else if (!frame) frame = requestAnimationFrame(render)
-    }
-    const measure = () => {
-      start = stage.getBoundingClientRect().top + window.scrollY
-      distance = Math.max(1, stage.offsetHeight - pin.offsetHeight)
-      const inset = (header.current?.offsetHeight ?? 72) + (window.innerWidth <= 600 ? 12 : 20)
-      const scale = Math.min(.925, Math.max(.8, (window.innerHeight - inset - 20) / surface.offsetHeight))
-      stage.style.setProperty("--lp-hero-end-scale", String(scale))
-      stage.style.setProperty("--lp-hero-drop", `${inset}px`)
-      updateTarget(true)
-    }
-    const onScroll = () => updateTarget()
-    measure()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", measure)
-    reducedMotion.addEventListener("change", measure)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", measure)
-      reducedMotion.removeEventListener("change", measure)
-    }
-  }, [])
-
-  useEffect(() => {
-    let revealTimer: ReturnType<typeof setTimeout> | undefined
-    const onScroll = () => {
-      setHeaderHidden(true)
-      clearTimeout(revealTimer)
-      revealTimer = setTimeout(() => setHeaderHidden(false), 240)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => { window.removeEventListener("scroll", onScroll); clearTimeout(revealTimer) }
-  }, [])
-
-  useEffect(() => {
-    const video = heroVideo.current
-    if (!video) return
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const updatePlayback = () => {
-      if (reducedMotion.matches) video.pause()
-      else void video.play().catch(() => {})
-    }
-    updatePlayback()
-    reducedMotion.addEventListener("change", updatePlayback)
-    return () => { reducedMotion.removeEventListener("change", updatePlayback); video.pause() }
-  }, [])
 
   useEffect(() => {
     const closeOutside = (event: PointerEvent) => {
@@ -276,7 +216,7 @@ export default function Home() {
     </header>
 
     <div className="lp-hero-stage" ref={heroStage}><div className="lp-hero-pin"><section className="lp-hero" aria-labelledby="hero-heading">
-      <video ref={heroVideo} className="lp-hero-photo" autoPlay muted loop playsInline preload="metadata" poster="/assets/landing/operra-hero.webp" aria-hidden="true" tabIndex={-1} disablePictureInPicture>
+      <video ref={heroVideo} className="lp-hero-photo" autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} disablePictureInPicture>
         <source src="/assets/hero-video.mp4" type="video/mp4" />
       </video>
       <div className="lp-hero-shade" />

@@ -23,6 +23,55 @@
 .site-landing {
   scroll-behavior: auto;
 }
+.site-landing .lp-workspace,
+.site-landing .lp-together,
+.site-landing .lp-workflow,
+.site-landing .lp-final-cta {
+  opacity: 1;
+  transform: none;
+}
+.site-landing .lp-workspace.is-visible,
+.site-landing .lp-together.is-visible,
+.site-landing .lp-workflow.is-visible,
+.site-landing .lp-final-cta.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-landing .lp-workspace,
+  .site-landing .lp-together,
+  .site-landing .lp-workflow,
+  .site-landing .lp-final-cta {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  /* The landing page intentionally stays still; media is poster-only. */
+  .site-landing :not(video),
+  .site-landing :not(video)::before,
+  .site-landing :not(video)::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .site-landing .lp-workspace,
+  .site-landing .lp-together,
+  .site-landing .lp-workflow,
+  .site-landing .lp-final-cta {
+    opacity: 1;
+    transform: none;
+  }
+}
+html,
+body {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 .site-landing :is(h1,h2,h3,p,figure) { margin-top: 0; }
 .site-landing a { text-underline-offset: 5px; }
 .site-landing :focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
