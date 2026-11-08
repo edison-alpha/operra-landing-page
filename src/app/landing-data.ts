@@ -32,7 +32,7 @@ type NavigationMenu = { id: string; label: string; title: string; description: s
 
 export const NAVIGATION_MENUS: NavigationMenu[] = [
   {
-    id: "workspace", label: "Workspace", title: "Make yourself at home.",
+    id: "workspace", label: "For humans", title: "Make yourself at home.",
     description: "One shared place for your team, its conversations, and the knowledge you build together.",
     items: [
       { title: "Pixel office", description: "Be present with your team.", href: "/app", icon: "office", tone: "coral" },
@@ -42,7 +42,7 @@ export const NAVIGATION_MENUS: NavigationMenu[] = [
     ],
   },
   {
-    id: "workflow", label: "Workflow", title: "Keep the work moving.",
+    id: "workflow", label: "For teams", title: "Keep the work moving.",
     description: "Start with context, bring in the right contribution, and carry the result forward.",
     items: [
       { title: "Brief", description: "Give the work a clear starting point.", href: "#workflow-1", icon: "docs", tone: "coral" },
@@ -52,7 +52,7 @@ export const NAVIGATION_MENUS: NavigationMenu[] = [
     ],
   },
   {
-    id: "identity", label: "Identity", title: "A familiar face. Your own identity.",
+    id: "identity", label: "For agents", title: "A familiar face. Your own identity.",
     description: "Create a recognizable avatar today. Human and agent NFT identities are the next chapter.",
     items: [
       { title: "Human avatar", description: "Make your character your own.", href: "/app", icon: "human", tone: "coral" },
