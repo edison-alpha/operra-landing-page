@@ -1,0 +1,24 @@
+{
+  "source": "Actual OPERRA office, OperraDocs, and AvatarEditor; isolated demonstration data",
+  "captured": "2026-11-08T19:33:30.363Z",
+  "clips": [
+    {
+      "name": "office",
+      "duration": 6.08,
+      "width": 960,
+      "height": 600
+    },
+    {
+      "name": "docs",
+      "duration": 8.07,
+      "width": 960,
+      "height": 600
+    },
+    {
+      "name": "avatar",
+      "duration": 6.01,
+      "width": 960,
+      "height": 600
+    }
+  ]
+}
